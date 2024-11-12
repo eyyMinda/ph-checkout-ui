@@ -62,9 +62,6 @@ name = "Padding Block"
 [[extensions.settings.fields.validations]]
 name = "choices"
 value = '["none", "extraTight", "tight", "base", "loose", "extraLoose"]'
-[[extensions.settings.fields.validations]]
-name = "max"
-value = "10"
 
 [[extensions.settings.fields]]
 key = "padding_inline"
@@ -73,6 +70,3 @@ name = "Padding Inline"
 [[extensions.settings.fields.validations]]
 name = "choices"
 value = '["none", "extraTight", "tight", "base", "loose", "extraLoose"]'
-[[extensions.settings.fields.validations]]
-name = "max"
-value = "10"
