@@ -2,7 +2,6 @@ import {
   reactExtension,
   Image,
   useSettings,
-  InlineStack,
   Spacing,
   View,
   BlockStack,

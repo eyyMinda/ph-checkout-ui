@@ -45,7 +45,6 @@ api_access = true
 # https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#settings-definition
 
 [extensions.settings]
-name = "Name of the block"
 [[extensions.settings.fields]]
 key = "author_source"
 type = "single_line_text_field"
