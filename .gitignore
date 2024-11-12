@@ -28,4 +28,3 @@ extensions/*/dist
 
 # custom
 extensions/content/*
-extensions/image-block/*
