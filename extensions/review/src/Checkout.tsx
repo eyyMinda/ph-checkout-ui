@@ -9,7 +9,6 @@ import {
   Text,
   Grid
 } from "@shopify/ui-extensions-react/checkout";
-import { validateSpacing } from "helpers";
 
 export default reactExtension("purchase.checkout.block.render", () => <Extension />);
 
@@ -26,10 +25,6 @@ interface settings {
 function Extension() {
   const { author_source, text, stars, author, date, padding_block, padding_inline }: settings = useSettings();
 
-  // Runtime check to ensure values are valid
-  const validatedPaddingBlock = validateSpacing(padding_block) ? padding_block : "none";
-  const validatedPaddingInline = validateSpacing(padding_inline) ? padding_inline : "none";
-
   return (
     <Grid
       columns={["12%", "fill"]}
@@ -37,7 +32,7 @@ function Extension() {
       spacing="base"
       border={"base"}
       borderRadius={"loose"}
-      padding={[validatedPaddingBlock, validatedPaddingInline]}>
+      padding={[padding_block, padding_inline]}>
       {author_source && (
         <View maxInlineSize={60} maxBlockSize={60} padding={["tight", "none"]}>
           <Image fit="cover" source={author_source} aspectRatio={1} cornerRadius={"fullyRounded"} />
