@@ -6,8 +6,8 @@
 api_version = "2024-10"
 
 [[extensions]]
-name = "Image Block"
-handle = "image-block"
+name = "Review"
+handle = "review"
 type = "ui_extension"
 
 
@@ -45,15 +45,31 @@ api_access = true
 # https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#settings-definition
 
 [extensions.settings]
+name = "Name of the block"
 [[extensions.settings.fields]]
-key = "source"
+key = "author_source"
 type = "single_line_text_field"
-name = "Image URL"
+name = "Author Image URL"
 
 [[extensions.settings.fields]]
-key = "source_mb"
+key = "text"
+type = "multi_line_text_field"
+name = "Review Text"
+
+[[extensions.settings.fields]]
+key = "stars"
 type = "single_line_text_field"
-name = "Image URL (Mobile)"
+name = "Stars Image URL"
+
+[[extensions.settings.fields]]
+key = "author"
+type = "single_line_text_field"
+name = "Author Name"
+
+[[extensions.settings.fields]]
+key = "date"
+type = "single_line_text_field"
+name = "Date"
 
 [[extensions.settings.fields]]
 key = "padding_block"
