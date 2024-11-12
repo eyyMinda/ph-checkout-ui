@@ -74,7 +74,9 @@ name = "Date"
 key = "padding_block"
 type = "single_line_text_field"
 name = "Padding Block"
-description = "Available values: 'none' | 'extraTight' | 'tight' | 'base' | 'loose' | 'extraLoose'"
+[[extensions.settings.fields.validations]]
+name = "choices"
+value = '["none", "extraTight", "tight", "base", "loose", "extraLoose"]'
 [[extensions.settings.fields.validations]]
 name = "max"
 value = "10"
@@ -83,7 +85,9 @@ value = "10"
 key = "padding_inline"
 type = "single_line_text_field"
 name = "Padding Inline"
-description = "Available values: 'none' | 'extraTight' | 'tight' | 'base' | 'loose' | 'extraLoose'"
+[[extensions.settings.fields.validations]]
+name = "choices"
+value = '["none", "extraTight", "tight", "base", "loose", "extraLoose"]'
 [[extensions.settings.fields.validations]]
 name = "max"
 value = "10"
