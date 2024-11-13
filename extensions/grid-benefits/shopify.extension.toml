@@ -97,14 +97,6 @@ name = "choices"
 value = '["normal", "italic", "bold"]'
 
 [[extensions.settings.fields]]
-key = "text_size"
-type = "single_line_text_field"
-name = "Text Size"
-[[extensions.settings.fields.validations]]
-name = "choices"
-value = '["extraSmall", "small", "base", "medium", "large", "extraLarge"]'
-
-[[extensions.settings.fields]]
 key = "text_appearance"
 type = "single_line_text_field" 
 name = "Text Appearance"

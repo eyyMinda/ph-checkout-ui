@@ -13,7 +13,7 @@ import {
   CornerRadius,
   Rows
 } from "@shopify/ui-extensions-react/checkout";
-import { Emphasis, TextSize } from "@shopify/ui-extensions/src/surfaces/checkout/components/shared";
+import { Emphasis } from "@shopify/ui-extensions/src/surfaces/checkout/components/shared";
 
 export default reactExtension("purchase.checkout.block.render", () => <Extension />);
 
@@ -23,7 +23,6 @@ interface settings {
   borderRadius?: CornerRadius;
   padding_block?: Spacing;
   padding_inline?: Spacing;
-  text_size?: TextSize;
   text_style?: Emphasis | "normal";
   text_appearance?: TextAppearance | "normal";
   source_1?: string;
@@ -45,7 +44,6 @@ function Extension() {
     borderRadius,
     padding_block,
     padding_inline,
-    text_size,
     text_style,
     text_appearance,
     source_1,
@@ -79,7 +77,7 @@ function Extension() {
     borderRadius,
     padding: [padding_block || "none", padding_inline] as [Spacing, Spacing]
   };
-  const textAttributes = { size: text_size };
+  const textAttributes = { size: size.text };
   if (text_style !== "normal") textAttributes["emphasis"] = text_style;
   if (text_appearance !== "normal") textAttributes["appearance"] = text_appearance;
 
