@@ -76,6 +76,26 @@ type = "single_line_text_field"
 name = "Block-3 Text"
 
 [[extensions.settings.fields]]
+key = "source_4"
+type = "single_line_text_field"
+name = "Block-4 Image URL"
+
+[[extensions.settings.fields]]
+key = "text_4"
+type = "single_line_text_field"
+name = "Block-4 Text"
+
+[[extensions.settings.fields]]
+key = "source_5"
+type = "single_line_text_field"
+name = "Block-5 Image URL"
+
+[[extensions.settings.fields]]
+key = "text_5"
+type = "single_line_text_field"
+name = "Block-5 Text"
+
+[[extensions.settings.fields]]
 key = "padding_block"
 type = "single_line_text_field"
 name = "Padding Block"
