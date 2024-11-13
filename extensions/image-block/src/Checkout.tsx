@@ -1,5 +1,5 @@
 import { reactExtension, Image, useSettings, InlineStack, Spacing, View } from "@shopify/ui-extensions-react/checkout";
-import { displayDesktopStyle, displayMobileStyle } from "helpers";
+import { displayDesktopStyle, displayMobileStyle } from "lib/utils";
 
 export default reactExtension("purchase.checkout.block.render", () => <Extension />);
 
