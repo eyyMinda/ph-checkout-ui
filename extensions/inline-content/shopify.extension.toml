@@ -18,6 +18,9 @@ type = "ui_extension"
 [[extensions.targeting]]
 module = "./src/Checkout.tsx"
 target = "purchase.checkout.block.render"
+[[extensions.targeting]]
+module = "./src/Header.tsx"
+target = "purchase.checkout.header.render-after"
 
 [extensions.capabilities]
 # Gives your extension access to directly query Shopify’s storefront API.
