@@ -20,3 +20,11 @@ export function debounce(func: () => void, wait: number): () => void {
 }
 export const normalizeImageSize = (size: number | undefined, defaultSize: number = 80): number =>
   size && size >= 10 ? size : defaultSize;
+
+export const formatTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  const pad = (num: number) => (num < 10 ? `0${num}` : `${num}`);
+
+  return `${pad(minutes)} : ${pad(remainingSeconds)}`;
+};
