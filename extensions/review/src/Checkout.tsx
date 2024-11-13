@@ -7,12 +7,20 @@ import {
   BlockStack,
   TextBlock,
   Text,
-  Grid
+  Grid,
+  Background,
+  BorderStyle,
+  CornerRadius,
+  Rows,
+  Columns
 } from "@shopify/ui-extensions-react/checkout";
 
 export default reactExtension("purchase.checkout.block.render", () => <Extension />);
 
 interface settings {
+  background?: Background;
+  border?: BorderStyle;
+  borderRadius?: CornerRadius;
   author_source?: string;
   text?: string;
   stars?: string;
@@ -23,16 +31,31 @@ interface settings {
 }
 
 function Extension() {
-  const { author_source, text, stars, author, date, padding_block, padding_inline }: settings = useSettings();
+  const {
+    background,
+    border,
+    borderRadius,
+    author_source,
+    text,
+    stars,
+    author,
+    date,
+    padding_block,
+    padding_inline
+  }: settings = useSettings();
+
+  const attributes = {
+    columns: ["12%", "fill"] as Columns,
+    rows: "auto" as Rows,
+    spacing: "base" as Spacing,
+    background,
+    border,
+    borderRadius,
+    padding: [padding_block || "none", padding_inline] as [Spacing, Spacing]
+  };
 
   return (
-    <Grid
-      columns={["12%", "fill"]}
-      rows={"auto"}
-      spacing="base"
-      border={"base"}
-      borderRadius={"loose"}
-      padding={[padding_block, padding_inline]}>
+    <Grid {...attributes}>
       {author_source && (
         <View maxInlineSize={60} maxBlockSize={60} padding={["tight", "none"]}>
           <Image fit="cover" source={author_source} aspectRatio={1} cornerRadius={"fullyRounded"} />
