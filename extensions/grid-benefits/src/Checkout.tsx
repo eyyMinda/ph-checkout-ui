@@ -7,12 +7,25 @@ import {
   Grid,
   GridItemSize,
   TextBlock,
-  BlockLayout
+  BlockLayout,
+  Background,
+  BorderStyle,
+  CornerRadius,
+  Rows
 } from "@shopify/ui-extensions-react/checkout";
+import { Emphasis, TextSize } from "@shopify/ui-extensions/src/surfaces/checkout/components/shared";
 
 export default reactExtension("purchase.checkout.block.render", () => <Extension />);
 
 interface settings {
+  background?: Background;
+  border?: BorderStyle;
+  borderRadius?: CornerRadius;
+  padding_block?: Spacing;
+  padding_inline?: Spacing;
+  text_size?: TextSize;
+  text_style?: Emphasis | "normal";
+  text_appearance?: TextAppearance | "normal";
   source_1?: string;
   text_1?: string;
   source_2?: string;
@@ -23,12 +36,18 @@ interface settings {
   text_4?: string;
   source_5?: string;
   text_5?: string;
-  padding_block?: Spacing;
-  padding_inline?: Spacing;
 }
 
 function Extension() {
   const {
+    background,
+    border,
+    borderRadius,
+    padding_block,
+    padding_inline,
+    text_size,
+    text_style,
+    text_appearance,
     source_1,
     text_1,
     source_2,
@@ -38,9 +57,7 @@ function Extension() {
     source_4,
     text_4,
     source_5,
-    text_5,
-    padding_block,
-    padding_inline
+    text_5
   }: settings = useSettings();
 
   const items = [
@@ -53,15 +70,21 @@ function Extension() {
   const size = sizes[items.length];
   const dynamicColumns = items.map(() => "1fr" as GridItemSize);
 
+  const attributes = {
+    columns: dynamicColumns,
+    rows: "auto" as Rows,
+    spacing: size.spacing,
+    background,
+    border,
+    borderRadius,
+    padding: [padding_block || "none", padding_inline] as [Spacing, Spacing]
+  };
+  const textAttributes = { size: text_size };
+  if (text_style !== "normal") textAttributes["emphasis"] = text_style;
+  if (text_appearance !== "normal") textAttributes["appearance"] = text_appearance;
+
   return (
-    <Grid
-      columns={dynamicColumns}
-      rows={"auto"}
-      spacing={size.spacing}
-      background={"subdued"}
-      border={"base"}
-      borderRadius={"loose"}
-      padding={[padding_block, padding_inline]}>
+    <Grid {...attributes}>
       {items.map((item, index) => (
         <BlockLayout
           key={index}
@@ -71,7 +94,7 @@ function Extension() {
           <View maxInlineSize={size.img} maxBlockSize={size.img}>
             <Image fit="cover" source={item.source} />
           </View>
-          <TextBlock size={size.text} appearance={"accent"} inlineAlignment={"center"}>
+          <TextBlock {...textAttributes} inlineAlignment={"center"}>
             {item.text}
           </TextBlock>
         </BlockLayout>
@@ -80,6 +103,7 @@ function Extension() {
   );
 }
 
+type TextAppearance = "accent" | "subdued" | "info" | "success" | "warning" | "critical" | "decorative";
 const sizes = {
   "1": { img: 100, text: "large", spacing: "tight" },
   "2": { img: 80, text: "medium", spacing: "tight" },
