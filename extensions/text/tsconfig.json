@@ -8,8 +8,7 @@
     "baseUrl": "../../",
     "paths": {
       "hooks/*": ["hooks/*"],
-      "helpers/*": ["helpers/*"],
-      "utils/*": ["utils/*"],
+      "lib/*": ["lib/*"],
       "components/*": ["components/*"]
     }
   },
