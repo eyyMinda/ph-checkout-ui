@@ -86,7 +86,7 @@ type = "single_line_text_field"
 name = "Text Appearance"
 [[extensions.settings.fields.validations]]
 name = "choices"
-value = '["accent", "subdued", "info", "success", "warning", "critical", "decorative"]'
+value = '["normal", "accent", "subdued", "info", "success", "warning", "critical", "decorative"]'
 
 [[extensions.settings.fields]]
 key = "padding_block"
