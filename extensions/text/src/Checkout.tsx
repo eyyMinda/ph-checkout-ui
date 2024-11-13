@@ -17,7 +17,7 @@ interface settings {
   text_align?: InlineAlignment;
   text_size?: TextSize;
   text_style?: Emphasis | "normal";
-  text_appearance?: TextAppearance;
+  text_appearance?: TextAppearance | "normal";
   padding_block?: Spacing;
   padding_inline?: Spacing;
 }
@@ -34,11 +34,9 @@ function Extension() {
     padding_inline
   }: settings = useSettings();
 
-  const attributes = {
-    size: text_size,
-    appearance: text_appearance
-  };
+  const attributes = { size: text_size };
   if (text_style !== "normal") attributes["emphasis"] = text_style;
+  if (text_appearance !== "normal") attributes["appearance"] = text_appearance;
 
   return (
     <InlineStack inlineAlignment={text_align} padding={[padding_block, padding_inline]}>
