@@ -12,7 +12,8 @@ import {
   TextBlock
 } from "@shopify/ui-extensions-react/checkout";
 import { Emphasis, TextSize } from "@shopify/ui-extensions/src/surfaces/checkout/components/shared";
-import { normalizeImageSize } from "lib/utils";
+import { displayMobileStyle, displayDesktopStyle, normalizeImageSize } from "lib/utils";
+
 export default reactExtension("purchase.checkout.header.render-after", () => <Extension />);
 
 interface settings {
@@ -67,7 +68,7 @@ function Extension() {
     spacing,
     padding: [padding_block, padding_inline] as [Spacing, Spacing]
   };
-  const textAttributes = { size: text_size };
+  const textAttributes = {};
   if (text_style !== "normal") textAttributes["emphasis"] = text_style;
   if (text_appearance !== "normal") textAttributes["appearance"] = text_appearance;
 
@@ -78,7 +79,16 @@ function Extension() {
           <Image fit="cover" source={source_pre} />
         </View>
       )}
-      <TextBlock {...textAttributes}>{text}</TextBlock>
+      <View display={displayDesktopStyle}>
+        <TextBlock {...textAttributes} size={text_size}>
+          {text}
+        </TextBlock>
+      </View>
+      <View display={displayMobileStyle}>
+        <TextBlock {...textAttributes} size={mobileText[text_size] as TextSize}>
+          {text}
+        </TextBlock>
+      </View>
       {source_app && (
         <View maxInlineSize={normalizeImageSize(source_app_width)} maxBlockSize={normalizeImageSize(source_app_height)}>
           <Image fit="cover" source={source_app} />
@@ -89,3 +99,12 @@ function Extension() {
 }
 
 type TextAppearance = "accent" | "subdued" | "info" | "success" | "warning" | "critical" | "decorative";
+
+const mobileText = {
+  extraSmall: "extraSmall",
+  small: "extraSmall",
+  base: "small",
+  medium: "base",
+  large: "medium",
+  extraLarge: "large"
+};
