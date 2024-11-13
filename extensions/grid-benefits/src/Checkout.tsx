@@ -14,6 +14,7 @@ import {
   Rows
 } from "@shopify/ui-extensions-react/checkout";
 import { Emphasis } from "@shopify/ui-extensions/src/surfaces/checkout/components/shared";
+import { displayMobileStyle, displayDesktopStyle } from "lib/utils";
 
 export default reactExtension("purchase.checkout.block.render", () => <Extension />);
 
@@ -77,7 +78,7 @@ function Extension() {
     borderRadius,
     padding: [padding_block || "none", padding_inline] as [Spacing, Spacing]
   };
-  const textAttributes = { size: size.text };
+  const textAttributes = {};
   if (text_style !== "normal") textAttributes["emphasis"] = text_style;
   if (text_appearance !== "normal") textAttributes["appearance"] = text_appearance;
 
@@ -92,9 +93,16 @@ function Extension() {
           <View maxInlineSize={size.img} maxBlockSize={size.img}>
             <Image fit="cover" source={item.source} />
           </View>
-          <TextBlock {...textAttributes} inlineAlignment={"center"}>
-            {item.text}
-          </TextBlock>
+          <View display={displayDesktopStyle}>
+            <TextBlock {...textAttributes} inlineAlignment={"center"} size={size.text}>
+              {item.text}
+            </TextBlock>
+          </View>
+          <View display={displayMobileStyle}>
+            <TextBlock {...textAttributes} inlineAlignment={"center"} size={size.text_mb}>
+              {item.text}
+            </TextBlock>
+          </View>
         </BlockLayout>
       ))}
     </Grid>
@@ -103,9 +111,9 @@ function Extension() {
 
 type TextAppearance = "accent" | "subdued" | "info" | "success" | "warning" | "critical" | "decorative";
 const sizes = {
-  "1": { img: 100, text: "large", spacing: "tight" },
-  "2": { img: 80, text: "medium", spacing: "tight" },
-  "3": { img: 60, text: "base", spacing: "tight" },
-  "4": { img: 40, text: "small", spacing: "extraTight" },
+  "1": { img: 100, text: "large", text_mb: "medium", spacing: "tight" },
+  "2": { img: 80, text: "medium", text_mb: "base", spacing: "tight" },
+  "3": { img: 60, text: "base", text_mb: "small", spacing: "tight" },
+  "4": { img: 40, text: "small", text_mb: "small", spacing: "extraTight" },
   "5": { img: 30, text: "extraSmall", spacing: "none" }
 };

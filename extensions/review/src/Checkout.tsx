@@ -12,9 +12,10 @@ import {
   BorderStyle,
   CornerRadius,
   Rows,
-  Columns
+  Columns,
+  Style
 } from "@shopify/ui-extensions-react/checkout";
-
+import { displayMobileStyle, displayDesktopStyle } from "lib/utils";
 export default reactExtension("purchase.checkout.block.render", () => <Extension />);
 
 interface settings {
@@ -62,7 +63,16 @@ function Extension() {
         </View>
       )}
       <BlockStack spacing={"tight"}>
-        <TextBlock size={"medium"}>{text}</TextBlock>
+        {
+          <View display={displayDesktopStyle}>
+            <TextBlock size={"medium"}>{text}</TextBlock>
+          </View>
+        }
+        {
+          <View display={displayMobileStyle}>
+            <TextBlock size={"base"}>{text}</TextBlock>
+          </View>
+        }
         <Grid columns={["auto", "auto", "auto"]} rows={"auto"} spacing={"tight"} blockAlignment={"center"}>
           {stars && (
             <View maxInlineSize={80}>
