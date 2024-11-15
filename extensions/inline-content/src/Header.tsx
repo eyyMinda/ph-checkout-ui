@@ -33,7 +33,8 @@ interface settings {
   text_size?: TextSize;
   text_style?: Emphasis | "normal";
   text_appearance?: TextAppearance | "normal";
-  padding_block?: Spacing;
+  padding_top?: Spacing;
+  padding_bottom?: Spacing;
   padding_inline?: Spacing;
 }
 
@@ -55,7 +56,8 @@ function Extension() {
     text_size,
     text_style,
     text_appearance,
-    padding_block = "none",
+    padding_top = "none",
+    padding_bottom = "none",
     padding_inline = "none"
   }: settings = useSettings();
 
@@ -66,7 +68,7 @@ function Extension() {
     inlineAlignment,
     blockAlignment,
     spacing,
-    padding: [padding_block, padding_inline] as [Spacing, Spacing]
+    padding: [padding_top, padding_inline, padding_bottom, padding_inline] as [Spacing, Spacing, Spacing, Spacing]
   };
   const textAttributes = {};
   if (text_style !== "normal") textAttributes["emphasis"] = text_style;
