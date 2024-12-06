@@ -72,9 +72,9 @@ function Extension() {
   };
 
   return (
-    <Grid {...attributes}>
+    <Grid {...attributes} id="banner-timer-wrapper">
       {icon_source && (
-        <View maxInlineSize={normalizeImageSize(icon_width)}>
+        <View maxInlineSize={normalizeImageSize(icon_width)} minInlineSize={normalizeImageSize(icon_width)}>
           <Image fit="cover" source={icon_source} aspectRatio={1} cornerRadius={"fullyRounded"} />
         </View>
       )}
