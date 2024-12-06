@@ -56,6 +56,25 @@ type = "single_line_text_field"
 name = "Image URL (Mobile)"
 
 [[extensions.settings.fields]]
+key = "inline_size"
+type = "number_integer"
+name = "Image Width"
+[[extensions.settings.fields.validations]]
+name = "min"
+value = "100"
+[[extensions.settings.fields.validations]]
+name = "max"
+value = "600"
+
+[[extensions.settings.fields]]
+key = "inline_position"
+type = "single_line_text_field"
+name = "Image Alignment"
+[[extensions.settings.fields.validations]]
+name = "choices"
+value = '["start", "center", "end"]'
+
+[[extensions.settings.fields]]
 key = "padding_block"
 type = "single_line_text_field"
 name = "Padding Block"
