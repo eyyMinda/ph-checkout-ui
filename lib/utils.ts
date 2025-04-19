@@ -9,6 +9,12 @@ export const displayMobileStyle: MaybeResponsiveConditionalStyle<Display> = Styl
   { viewportInlineSize: { min: "medium" } },
   "none"
 );
+export const displayDesktopStyleAuto: MaybeResponsiveConditionalStyle<"none" | "auto"> = Style.default<"none" | "auto">(
+  "none"
+).when({ viewportInlineSize: { min: "medium" } }, "auto");
+export const displayMobileStyleAuto: MaybeResponsiveConditionalStyle<"none" | "auto"> = Style.default<"none" | "auto">(
+  "auto"
+).when({ viewportInlineSize: { min: "medium" } }, "none");
 
 // Debounce utility
 export function debounce(func: () => void, wait: number): () => void {
@@ -28,3 +34,19 @@ export const formatTime = (seconds: number): string => {
 
   return `${pad(minutes)} : ${pad(remainingSeconds)}`;
 };
+
+/**
+ Centralized logger function
+  @usage const DEBUG = true;
+          const { log, error } = logger(DEBUG);
+  @param DEBUG - Whether to log messages
+  @returns An object with log and error methods
+*/
+export const logger = (DEBUG: boolean) => ({
+  log: (section: string, message: string, ...args: any[]) => {
+    if (DEBUG) console.log(`[${section}] ${message}`, ...args);
+  },
+  error: (section: string, message: string, ...args: any[]) => {
+    if (DEBUG) console.error(`[${section}] ${message}`, ...args);
+  }
+});
