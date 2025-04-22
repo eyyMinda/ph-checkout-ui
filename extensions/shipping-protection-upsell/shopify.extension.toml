@@ -70,6 +70,12 @@ name = "Custom Price"
 description = "Enter a custom price for the upsell. FORMAT: '499' will be '$4.99'"
 
 [[extensions.settings.fields]]
+key = "compare_price"
+type = "single_line_text_field"
+name = "Custom Compare Price"
+description = "Enter a custom compare price for the upsell. FORMAT: '499' will be '$4.99'"
+
+[[extensions.settings.fields]]
 key = "image"
 type = "single_line_text_field"
 name = "Image"
@@ -82,6 +88,12 @@ name = "Variant"
 description = "Select the variant you want to upsell"
 
 # --------------- Display Settings ----------------
+
+[[extensions.settings.fields]]
+key = "preselected"
+type = "boolean"
+name = "Preselected"
+description = "Preselect the upsell"
 
 [[extensions.settings.fields]]
 key = "show_heading"
@@ -100,6 +112,18 @@ key = "show_price"
 type = "boolean"
 name = "Show Price"
 description = "Show the price for the upsell"
+
+[[extensions.settings.fields]]
+key = "show_compare_price"
+type = "boolean"
+name = "Show Compare Price"
+description = "Show the compare price for the upsell"
+
+[[extensions.settings.fields]]
+key = "price_under_title"
+type = "boolean"
+name = "Price Under Title"
+description = "Show the price under the title for the upsell"
 
 # --------------- Container ----------------
 

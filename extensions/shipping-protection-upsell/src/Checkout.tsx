@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   reactExtension,
   Divider,
@@ -22,7 +22,7 @@ import {
 } from "@shopify/ui-extensions-react/checkout";
 import { displayMobileStyleAuto, displayDesktopStyleAuto, logger } from "../../../lib/utils";
 
-const DEBUG = false;
+const DEBUG = true;
 const { log, error } = logger(DEBUG);
 
 // Set up the entry point for the extension
@@ -51,11 +51,15 @@ interface Settings {
   title: string;
   description: string;
   price: string;
+  compare_price: string;
   image: string;
   variant: string;
+  preselected: boolean;
   show_heading: boolean;
   show_description: boolean;
   show_price: boolean;
+  show_compare_price: boolean;
+  price_under_title: boolean;
   background: Background;
   border: BorderStyle;
   padding: [Spacing, Spacing];
@@ -99,6 +103,9 @@ interface ProductType {
     nodes: {
       id: string;
       price: {
+        amount: string;
+      };
+      compareAtPrice: {
         amount: string;
       };
     }[];
@@ -163,6 +170,8 @@ function App() {
     const [adding, setAdding] = useState(false);
     const [checked, setChecked] = useState(false);
     const [showError, setShowError] = useState(false);
+    // Add ref to track if we've attempted preselection
+    const hasAttemptedPreselection = useRef(false);
 
     try {
       const lines = useCartLines() as CartLineType[];
@@ -182,11 +191,15 @@ function App() {
         title: (rawSettings?.title as string) || "Shipping protection",
         description: (rawSettings?.description as string) || "",
         price: (rawSettings?.price as string) || "",
+        compare_price: (rawSettings?.compare_price as string) || "",
         image: (rawSettings?.image as string) || "",
         variant: (rawSettings?.variant as string) || "",
+        preselected: (rawSettings?.preselected as boolean) || false,
         show_heading: rawSettings?.show_heading as boolean,
         show_description: rawSettings?.show_description as boolean,
         show_price: rawSettings?.show_price as boolean,
+        show_compare_price: rawSettings?.show_compare_price as boolean,
+        price_under_title: rawSettings?.price_under_title as boolean,
         background: (rawSettings?.background as Background) || "transparent",
         border: (rawSettings?.border as BorderStyle) || "base",
         padding: [rawSettings?.padding_block || "none", rawSettings?.padding_inline || "none"] as [Spacing, Spacing]
@@ -202,6 +215,8 @@ function App() {
 
       // Only check CONFIG in DEBUG mode
       if (variant && (!DEBUG || CONFIG.ENABLE_VARIANT_FETCH)) {
+        // Reset preselection attempt when variant changes
+        hasAttemptedPreselection.current = false;
         fetchVariantData(variant as string);
       }
     }, [rawSettings?.variant]);
@@ -307,6 +322,9 @@ function App() {
                 price {
                   amount
                 }
+                compareAtPrice {
+                  amount
+                }
                 product {
                   id
                   title
@@ -338,7 +356,8 @@ function App() {
                   nodes: [
                     {
                       id: variant.id,
-                      price: variant.price
+                      price: variant.price,
+                      compareAtPrice: variant.compareAtPrice
                     }
                   ]
                 }
@@ -362,6 +381,21 @@ function App() {
         setLoading(false);
       }
     };
+
+    // useEffect to handle preselected logic after product is loaded
+    useEffect(() => {
+      if (product && settings.preselected && !hasAttemptedPreselection.current) {
+        const variantId = product.variants.nodes[0]?.id;
+        if (!variantId) return;
+
+        const isInCart = lines.some(line => line.merchandise.id === variantId);
+        if (!isInCart) {
+          log("App", "Auto-adding product to cart due to preselected setting");
+          handleAddToCart(variantId);
+        }
+        hasAttemptedPreselection.current = true;
+      }
+    }, [product, settings.preselected, lines, handleAddToCart]); // Include all dependencies
 
     if (loading) {
       log("App", "Rendering LoadingSkeleton");
@@ -448,6 +482,15 @@ function ProductOffer({
 }: ProductOfferProps): JSX.Element {
   log("ProductOffer", "Rendering with product:", product?.title, "checked:", checked);
 
+  // Visual representation of the switch should consider both the cart state (checked)
+  // and the preselected setting
+  const [switchState, setSwitchState] = useState(checked);
+
+  // Keep switch state in sync with checked prop (cart state)
+  useEffect(() => {
+    setSwitchState(checked);
+  }, [checked]);
+
   try {
     // Safety checks to avoid null reference errors
     if (!product || !product.variants || !product.variants.nodes || product.variants.nodes.length === 0) {
@@ -456,18 +499,12 @@ function ProductOffer({
     }
 
     const { images, variants } = product;
-    log("ProductOffer", "Product has images:", !!images?.nodes?.length);
+    log("ProductOffer", "Product:", product);
 
-    let renderPrice = i18n.formatCurrency(Number(settings.price) / 100) || "";
-    if (!settings.price) {
-      try {
-        renderPrice = i18n.formatCurrency(variants.nodes[0].price.amount);
-        log("ProductOffer", "Price formatted:", renderPrice);
-      } catch (err) {
-        error("ProductOffer", "Error formatting price:", err);
-        renderPrice = variants.nodes[0].price.amount;
-      }
-    }
+    let currentPrice = i18n.formatCurrency(Number(settings.price) / 100) || "";
+    if (!settings.price) currentPrice = i18n.formatCurrency(variants.nodes[0].price.amount);
+    let comparePrice = i18n.formatCurrency(Number(settings.compare_price) / 100) || "";
+    if (!settings.compare_price) comparePrice = i18n.formatCurrency(variants.nodes[0].compareAtPrice.amount);
 
     const imageUrl = settings.image ?? (images?.nodes?.[0]?.url || "");
     const variantId = variants.nodes[0].id;
@@ -475,25 +512,55 @@ function ProductOffer({
 
     log("ProductOffer", "Using image:", imageUrl?.substring(0, 50) + "...");
 
-    // Use the helper function
+    // Use the helper function with local state
     const onSwitchChange = (isChecked: boolean) => {
+      setSwitchState(isChecked);
       handleSwitchChangeHelper(isChecked, variantId, handleAddToCart, handleRemoveFromCart);
+    };
+
+    const renderBlockPrices = () => {
+      return (
+        <BlockStack spacing="none" inlineAlignment="center">
+          {settings.show_compare_price && (
+            <Text size="base" appearance="subdued" accessibilityRole="deletion">
+              {comparePrice}
+            </Text>
+          )}
+          {settings.show_price && (
+            <Text size="medium" emphasis="bold">
+              {currentPrice}
+            </Text>
+          )}
+        </BlockStack>
+      );
+    };
+    const renderInlinePrices = () => {
+      return (
+        <InlineLayout spacing="tight" columns={["auto", "auto"]} blockAlignment="center">
+          {settings.show_price && (
+            <Text size="medium" emphasis="bold">
+              {currentPrice}
+            </Text>
+          )}
+          {settings.show_compare_price && (
+            <Text size="base" appearance="subdued" accessibilityRole="deletion">
+              {comparePrice}
+            </Text>
+          )}
+        </InlineLayout>
+      );
     };
 
     const renderSwitchWithPrice = () => {
       return (
         <BlockStack spacing="extraTight" inlineAlignment="end">
-          {settings.show_price && (
-            <Text size="medium" emphasis="bold">
-              {renderPrice}
-            </Text>
-          )}
+          {!settings.price_under_title && renderBlockPrices()}
           {/* Only check CONFIG in DEBUG mode */}
           {(!DEBUG || CONFIG.ENABLE_SWITCH) && (
             <Switch
               id="shipping-protection"
               name="shipping-protection"
-              checked={checked}
+              checked={switchState}
               disabled={adding}
               onChange={onSwitchChange}
             />
@@ -530,6 +597,8 @@ function ProductOffer({
                 </Text>
               </InlineLayout>
 
+              {settings.price_under_title && renderInlinePrices()}
+
               {settings.show_description && (
                 <Text size="small" appearance="subdued">
                   {settings.description}
@@ -551,6 +620,9 @@ function ProductOffer({
               <Text size="medium" emphasis="bold">
                 {title}
               </Text>
+
+              {settings.price_under_title && renderInlinePrices()}
+
               {settings.show_description && (
                 <Text size="small" appearance="subdued">
                   {settings.description}

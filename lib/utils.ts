@@ -43,7 +43,7 @@ export const formatTime = (seconds: number): string => {
   @returns An object with log and error methods
 */
 export const logger = (DEBUG: boolean) => ({
-  log: (section: string, message: string, ...args: any[]) => {
+  log: (section: string, message: any, ...args: any[]) => {
     if (DEBUG) console.log(`[${section}] ${message}`, ...args);
   },
   error: (section: string, message: string, ...args: any[]) => {
